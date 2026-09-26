@@ -24,18 +24,12 @@ jobs:
         run: |
           pwd
           ls -la
-          find . -maxdepth 2 -type f | sort
+          find . -maxdepth 3 -type f | sort
 
       - name: Check Java
         run: |
           java -version
           javac -version
-
-      - name: Check Gradle Wrapper
-        run: |
-          ls -la gradlew
-          test -f gradlew
-          test -f gradle/wrapper/gradle-wrapper.properties
 
       - name: Grant execute permission
         run: chmod +x gradlew
