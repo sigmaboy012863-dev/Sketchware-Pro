@@ -20,22 +20,15 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Check project files
-        run: |
-          pwd
-          ls -la
-          find . -maxdepth 3 -type f | sort
-
-      - name: Check Java
-        run: |
-          java -version
-          javac -version
-
       - name: Grant execute permission
         run: chmod +x gradlew
 
-      - name: Check Gradle
-        run: ./gradlew --version
+      - name: Disable Google Services for CI
+        run: |
+          if [ -f app/build.gradle ]; then
+            sed -i '/com.google.gms.google-services/d' app/build.gradle
+            sed -i '/com.google.firebase/d' app/build.gradle
+          fi
 
       - name: Build APK
         run: ./gradlew assembleDebug --stacktrace --info
