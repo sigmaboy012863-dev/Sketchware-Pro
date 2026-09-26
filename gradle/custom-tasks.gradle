@@ -1,21 +1,19 @@
-/**
- * Creates a mock google-services.json if GOOGLE_SERVICES_JSON environment variable is absent.
- */
 tasks.register('createMockGoogleServices') {
     doLast {
         def secrets = System.getenv("GOOGLE_SERVICES_JSON")
+
         if (secrets != null && !secrets.trim().isEmpty()) {
             new File("$projectDir/google-services.json").text = secrets
             return
         }
-        def rootMockFile = file("google-services.json")
-        if (rootMockFile.exists() && rootMockFile.length() == 0) {
-            rootMockFile.delete()
-        }
-        def mockFile = file("src/debug/google-services.json")
-        if (!mockFile.exists()) {
-            mockFile.parentFile.mkdirs()
-            def mockContent = """{
+
+        ["debug", "release"].each { variant ->
+            def mockFile = file("src/${variant}/google-services.json")
+
+            if (!mockFile.exists()) {
+                mockFile.parentFile.mkdirs()
+
+                mockFile.text = """{
   "project_info": {
     "project_number": "123456789000",
     "firebase_url": "https://mock-project-default-rtdb.firebaseio.com",
@@ -45,7 +43,7 @@ tasks.register('createMockGoogleServices') {
   ],
   "configuration_version": "1"
 }"""
-            mockFile.text = mockContent
+            }
         }
     }
 }
